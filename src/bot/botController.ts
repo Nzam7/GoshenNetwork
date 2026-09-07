@@ -26,15 +26,16 @@ export class BotController {
     const trimmedInput = messageText.trim();
     const session = this.sessionManager.getSession(senderPhone);
 
-    // Reset command check
+    // Reset / Main Menu command check
     if (
       trimmedInput.toLowerCase() === 'menu' ||
       trimmedInput.toLowerCase() === 'hi' ||
       trimmedInput.toLowerCase() === 'hello' ||
-      trimmedInput.toLowerCase() === 'start'
+      trimmedInput.toLowerCase() === 'start' ||
+      trimmedInput.toLowerCase() === '0'
     ) {
       this.sessionManager.updateSession(senderPhone, SessionState.CATEGORY_MENU);
-      const categories = this.searchService.getCategories();
+      const categories = await this.searchService.getCategories();
       const menuText = MenuService.buildMainMenu(categories);
       const payload = this.whatsappService.createTextMessage(senderPhone, menuText);
       await this.whatsappService.sendMessage(payload);
@@ -42,7 +43,7 @@ export class BotController {
     }
 
     // Process search/selection query
-    const searchResult = this.searchService.search(trimmedInput);
+    const searchResult = await this.searchService.search(trimmedInput);
 
     let outboundText = '';
     if (searchResult.results.length === 0) {

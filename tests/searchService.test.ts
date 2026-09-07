@@ -11,20 +11,20 @@ describe('SearchService', () => {
     searchService = new SearchService(adapter);
   });
 
-  test('handles numeric menu selection', () => {
-    const result = searchService.search('1');
+  test('handles numeric menu selection', async () => {
+    const result = await searchService.search('1');
     expect(result.type).toBe('numeric');
     expect(result.results.length).toBeGreaterThan(0);
   });
 
-  test('handles keyword search for terms like "lawyer"', () => {
-    const result = searchService.search('lawyer');
+  test('handles keyword search for terms like "lawyer"', async () => {
+    const result = await searchService.search('lawyer');
     expect(result.type).toBe('keyword');
     expect(result.results.some((p) => p.businessName === 'Shepherds Legal Services')).toBe(true);
   });
 
-  test('returns type "none" for non-matching queries', () => {
-    const result = searchService.search('astronaut');
+  test('returns type "none" for non-matching queries', async () => {
+    const result = await searchService.search('astronaut');
     expect(result.type).toBe('none');
     expect(result.results.length).toBe(0);
   });
